@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+// src/styles.scss
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+body {
+    padding: 1rem;
+  }
+  
+  .custom-button {
+    @extend .btn;
+    @extend .btn-primary;
+    padding: 0.5rem 1rem;
+    &:hover {
+      @extend .btn-dark;
+    }
+  }

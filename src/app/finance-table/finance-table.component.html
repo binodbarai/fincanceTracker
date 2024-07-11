@@ -1,0 +1,136 @@
+<div class="wrapper">
+  <form [formGroup]="expenseForm">
+    <div class="container mt-5">
+      <h1 class="text-center mt-3">Track your expense</h1>
+      <table class="table table-bordered">
+        <thead class="table-head">
+          <tr>
+            <th rowspan="2" class="align-middle">SN</th>
+            <th rowspan="2" class="align-middle">Title</th>
+            <ng-container formArrayName="years">
+              @for (yearCtrl of years.controls; track yearCtrl; let yearIndex = $index) {
+                <th [formGroupName]="yearIndex" [attr.colspan]="getMonths(yearIndex).length">
+                  Year
+                  <input
+                    type="text"
+                    class="form-control form-control-sm d-inline-block"
+                    style="width: 100px"
+                    placeholder="2023"
+                    formControlName="year"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary mx-2"
+                    (click)="addYear()"
+                  >
+                    <i class="mdi mdi-plus"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger" (click)="removeYear(yearIndex)">
+                    <i class="mdi mdi-delete"></i>
+                  </button>
+                </th>
+              }
+            </ng-container>
+            <th rowspan="2" class="align-middle">Action</th>
+          </tr>
+          <tr>
+            <ng-container formArrayName="years">
+              @for (yearCtrl of years.controls; track yearCtrl; let yearIndex = $index) {
+                <ng-container [formGroupName]="yearIndex">
+                  <ng-container formArrayName="months">
+                    @for (monthCtrl of getMonths(yearIndex).controls; track monthCtrl; let monthIndex = $index) {
+                      <th [formGroupName]="monthIndex">
+                        <div class="d-flex justify-content-between">
+                          <div>
+                            <input
+                              type="text"
+                              class="form-control form-control-sm mb-2"
+                              style="width: 100px"
+                              placeholder="Month (JAN)"
+                              formControlName="name"
+                            />
+                          </div>
+                          <div>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-primary mx-2"
+                              (click)="addMonth(yearIndex)"
+                            >
+                              <i class="mdi mdi-plus"></i>
+                            </button>
+                            @if(getMonths(yearIndex).length > 1){
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-danger"
+                                (click)="removeMonth(yearIndex, monthIndex)"
+                              >
+                                <i class="mdi mdi-delete"></i>
+                              </button>
+                            }
+                          </div>
+                        </div>
+                      </th>
+                    }
+                  </ng-container>
+                </ng-container>
+              }
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody class="table-light">
+          <tr>
+            <td>1</td>
+            <td>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                style="width: 150px"
+                placeholder="Add your title"
+              />
+            </td>
+            <ng-container formArrayName="years">
+              @for (yearCtrl of years.controls; track yearCtrl; let yearIndex = $index) {
+                <ng-container [formGroupName]="yearIndex">
+                  <ng-container formArrayName="months">
+                    @for (monthCtrl of getMonths(yearIndex).controls; track monthCtrl; let monthIndex = $index) {
+                      <ng-container [formGroupName]="monthIndex">
+                        <ng-container formArrayName="expenses">
+                          @for (expenseCtrl of getExpenses(yearIndex, monthIndex).controls; track expenseCtrl; let expenseIndex = $index) {
+                            <td [formGroupName]="expenseIndex">
+                              <input
+                                type="text"
+                                class="form-control form-control-sm"
+                                style="width: 100px"
+                                placeholder="Expense"
+                                formControlName="amount"
+                              />
+                            </td>
+                          }
+                        </ng-container>
+                      </ng-container>
+                    }
+                  </ng-container>
+                </ng-container>
+              }
+            </ng-container>
+            <td class="text-center">
+              <button class="btn btn-sm btn-primary mx-1">Edit</button>
+              <button class="btn btn-sm btn-danger mx-1">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="table-secondary">
+            <td colspan="2" class="text-end fw-bold">Total:</td>
+            <td [attr.colspan]="years.length * getMonths(0).length"></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="text-end mt-3">
+        <button class="btn btn-primary mx-3" (click)="addItem()">Add more Items</button>
+        <button class="btn btn-success">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
